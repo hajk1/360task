@@ -14,4 +14,14 @@ public class Chat {
         players.add(player);
     }
 
+    public void sendMessage(Message message) {
+        if (message instanceof PrivateMessage) {
+            PrivateMessage privateMessage = (PrivateMessage) message;
+            SuperPlayer recipientPlayer = players.stream().filter(superPlayer -> privateMessage.getReceiverPlayer().getUserName().equals(superPlayer.getUserName())).findFirst().orElse(null);
+            if (recipientPlayer == null)
+                throw new RuntimeException("Player not found:" + privateMessage.getSenderPlayer());
+            recipientPlayer.sendMessage(message);
+        }
+    }
+
 }

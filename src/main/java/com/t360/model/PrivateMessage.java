@@ -4,13 +4,15 @@ package com.t360.model;
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
  * @since : 12/20/2019, Fri
  **/
-public class DefaultMessage implements Message {
+public class PrivateMessage implements Message {
     private final String value;
     private final Player receiverPlayer;
+    private final Player senderPlayer;
 
-    public DefaultMessage(String value, Player player) {
+    public PrivateMessage(String value, Player senderPlayer, Player receiverPlayer) {
         this.value = value;
-        this.receiverPlayer = player;
+        this.senderPlayer = senderPlayer;
+        this.receiverPlayer = receiverPlayer;
     }
 
     public String getValue() {
@@ -19,5 +21,9 @@ public class DefaultMessage implements Message {
 
     public Player getReceiverPlayer() {
         return receiverPlayer;
+    }
+
+    public Player getSenderPlayer() {
+        return senderPlayer;
     }
 }
