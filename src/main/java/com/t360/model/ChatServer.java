@@ -4,6 +4,12 @@ package com.t360.model;
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
  * @since : 1/6/2020, Mon
  **/
+
+/**
+ * This class is used as the main class inorder to start the chat
+ * It creates a chat and then 2 players
+ * The 1st player(initiator) creates a private message and send it using chat class which has access to both players
+ */
 public class ChatServer {
     public static void main(String[] args) {
         Chat chat = new Chat();
