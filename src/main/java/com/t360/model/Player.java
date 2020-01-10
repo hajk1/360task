@@ -16,6 +16,10 @@ public class Player extends SuperPlayer {
     public static final int MAX_COUNTER = 10;
     private int receiveCounter;
     private int sendCounter;
+    /**
+     * This pattern shows Process Id, current username and sender left justified(8 chars) and the message
+     */
+    private final String msgTemplate = "PID:%s,username:%-8s,sender:%-8s,msg:%s";
 
     public Player(Chat chat, String userName) {
         super(userName);
@@ -33,12 +37,13 @@ public class Player extends SuperPlayer {
     void sendMessage(Message message) {
         final RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         final long pid = runtime.getPid();
-        System.out.println("Process ID is '" + pid);
-        System.out.println("message = " + message.getValue());
         if (mustEnd())
             return;
         if (message instanceof PrivateMessage) {
-            PrivateMessage replyMessage = new PrivateMessage(message.getValue() + (receiveCounter + 1), this, ((PrivateMessage) message).getSenderPlayer());
+            Player sender = ((PrivateMessage) message).getSenderPlayer();
+            String msg = String.format(msgTemplate, pid, getUserName(), sender.getUserName(), message.getValue());
+            System.out.println(msg);
+            PrivateMessage replyMessage = new PrivateMessage(message.getValue() + (receiveCounter + 1), this, sender);
             receiveCounter++;
             sendCounter++;
             chat.sendMessage(replyMessage);

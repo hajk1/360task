@@ -1,22 +1,14 @@
 package com.t360.model;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
- * @since : 1/6/2020, Mon
+ * @since : 1/10/2020, Fri
  **/
+public interface ChatServer extends Remote {
+    Player registerPlayer(String userName) throws RemoteException;
 
-/**
- * This class is used as the main class inorder to start the chat
- * It creates a chat and then 2 players
- * The 1st player(initiator) creates a private message and send it using chat class which has access to both players
- */
-public class ChatServer {
-    public static void main(String[] args) {
-        Chat chat = new Chat();
-        Player initiator = new Player(chat, "initiator");
-        Player secondPlayer = new Player(chat, "2nd");
-        PrivateMessage privateMessage = new PrivateMessage("Hi there!", initiator, secondPlayer);
-        chat.sendMessage(privateMessage);
-
-    }
+    void sendMessage(Message message) throws RemoteException;
 }
