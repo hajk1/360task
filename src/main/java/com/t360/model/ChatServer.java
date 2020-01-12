@@ -8,7 +8,14 @@ import java.rmi.RemoteException;
  * @since : 1/10/2020, Fri
  **/
 public interface ChatServer extends Remote {
+
+    Chat getChat() throws RemoteException;
+
+    void registerPlayer(Player player) throws RemoteException;
+
     Player registerPlayer(String userName) throws RemoteException;
+
+    SuperPlayer findPlayer(String userName) throws RemoteException;
 
     void sendMessage(Message message) throws RemoteException;
 }

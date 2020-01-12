@@ -1,5 +1,7 @@
 package com.t360.model;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
@@ -12,7 +14,7 @@ public class MultiProcess {
     private static final String CLIENT_MODE = "C";
     private static final String msg_server_client = "Server(S) mode or Client(C)?";
 
-    public void run() throws RemoteException {
+    public void run() throws RemoteException, MalformedURLException, NotBoundException {
         Scanner scanner = new Scanner(System.in);
         String process_state;
         do {
@@ -25,7 +27,7 @@ public class MultiProcess {
                 ChatServerImpl.run();
                 break;
             case CLIENT_MODE:
-                new MultiProcess().run();
+                new ChatClient().run();
                 break;
         }
     }

@@ -17,6 +17,20 @@
                     <target>1.10</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.t360.model.MainApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.1.2</version>
+            </plugin>
+
         </plugins>
     </build>
 

@@ -1,5 +1,6 @@
 package com.t360.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,8 @@ import java.util.Objects;
 /**
  * This is the super class for all players, it contain all necessary fields
  */
-public abstract class SuperPlayer {
+public abstract class SuperPlayer implements Serializable {
+
     private final String userName;
     Chat chat;
 
