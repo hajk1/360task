@@ -11,9 +11,10 @@ public interface ChatServer extends Remote {
 
     Chat getChat() throws RemoteException;
 
-    void registerPlayer(Player player) throws RemoteException;
+    void registerListener(IMessageListener listener) throws RemoteException;
 
-    Player registerPlayer(String userName) throws RemoteException;
+//    Player registerPlayer(String userName)
+//        throws RemoteException, NotBoundException, MalformedURLException;
 
     SuperPlayer findPlayer(String userName) throws RemoteException;
 

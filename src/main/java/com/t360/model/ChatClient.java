@@ -1,9 +1,8 @@
 package com.t360.model;
 
 import static com.t360.model.ChatServerImpl.HOST_USERNAME;
+import static com.t360.model.ChatServerImpl.getServerLocation;
 import static com.t360.model.ChatServerImpl.msg_player1;
-import static com.t360.model.ChatServerImpl.remotePort;
-import static com.t360.model.ChatServerImpl.serverName;
 
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
@@ -21,17 +20,13 @@ public class ChatClient {
     public void run() throws RemoteException, MalformedURLException, NotBoundException {
         System.out.println("client PID:" + ManagementFactory.getRuntimeMXBean().getPid());
         ChatServer chatServer = (ChatServer) Naming
-            .lookup("rmi://localhost:" + remotePort + "/" + serverName);
+            .lookup(getServerLocation());
         Scanner scanner = new Scanner(System.in);
         System.out.println(msg_player1);
         String userName1 = scanner.nextLine();
-        Chat chat = chatServer.getChat();
-
-        Player initiator = new Player(chat, userName1);
-//        chatServer.registerPlayer(initiator);
+        Player initiator = new Player(userName1, getServerLocation());
         String msg = scanner.nextLine();
-        PrivateMessage privateMessage = new PrivateMessage(msg, initiator,
-            (Player) chatServer.findPlayer(HOST_USERNAME));
+        PrivateMessage privateMessage = new PrivateMessage(msg, initiator, HOST_USERNAME);
         chatServer.sendMessage(privateMessage);
     }
 }

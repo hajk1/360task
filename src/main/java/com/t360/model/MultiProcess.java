@@ -27,7 +27,7 @@ public class MultiProcess {
                 ChatServerImpl.run();
                 break;
             case CLIENT_MODE:
-                new ChatClient().run();
+                Client.run();
                 break;
         }
     }

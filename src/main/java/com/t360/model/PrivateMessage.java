@@ -5,26 +5,31 @@ package com.t360.model;
  * @since : 12/20/2019, Fri
  **/
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 /***
  * This class is a private message between 2 players, it holds the message content and the sender and receiver players as well
  */
-public class PrivateMessage implements Message {
+public class PrivateMessage extends UnicastRemoteObject implements Message {
+
     private final String value;
-    private final Player receiverPlayer;
+    private final String receiverUsername;
     private final Player senderPlayer;
 
-    public PrivateMessage(String value, Player senderPlayer, Player receiverPlayer) {
+    public PrivateMessage(String value, Player senderPlayer, String receiverUsername)
+        throws RemoteException {
         this.value = value;
         this.senderPlayer = senderPlayer;
-        this.receiverPlayer = receiverPlayer;
+        this.receiverUsername = receiverUsername;
     }
 
     public String getValue() {
         return value;
     }
 
-    public Player getReceiverPlayer() {
-        return receiverPlayer;
+    public String getReceiverUsername() {
+        return receiverUsername;
     }
 
     public Player getSenderPlayer() {

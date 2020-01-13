@@ -1,6 +1,7 @@
 package com.t360.model;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,13 +32,14 @@ public class Chat implements Serializable {
     /**
      * This method is used for delivering a message to the correct recipient
      */
-    public void sendMessage(Message message) {
+    public void sendMessage(Message message) throws RemoteException {
         if (message instanceof PrivateMessage) {
             PrivateMessage privateMessage = (PrivateMessage) message;
             SuperPlayer recipientPlayer = findByUsername(
-                privateMessage.getReceiverPlayer().getUserName());
-            if (recipientPlayer == null)
+                privateMessage.getReceiverUsername());
+            if (recipientPlayer == null) {
                 throw new RuntimeException("Player not found:" + privateMessage.getSenderPlayer());
+            }
             recipientPlayer.sendMessage(message);
         }
     }

@@ -2,6 +2,10 @@ package com.t360.model;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 /**
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
@@ -12,19 +16,22 @@ import java.lang.management.RuntimeMXBean;
  * This is the base implementation of the SuperPlayer and it is committed to 10 times message delivering
  * The instances of this  class are unique based on their username
  */
-public class Player extends SuperPlayer {
+public class Player extends SuperPlayer implements IClient, IMessageListener {
+
     public static final int MAX_COUNTER = 10;
     private int receiveCounter;
     private int sendCounter;
+    private ChatServer chatServer;
     /**
      * This pattern shows Process Id, current username and sender left justified(8 chars) and the message
      */
     private final String msgTemplate = "PID:%s,username:%-8s,sender:%-8s,msg:%s";
 
-    public Player(Chat chat, String userName) {
+    public Player(String userName, String serverLocation)
+        throws RemoteException, NotBoundException, MalformedURLException {
         super(userName);
-        this.chat = chat;
-        this.chat.attach(this);
+        chatServer = (ChatServer) Naming.lookup(serverLocation);
+        chatServer.registerListener(this);
     }
 
     /**
@@ -34,26 +41,40 @@ public class Player extends SuperPlayer {
      *
      * @param message
      */
-    void sendMessage(Message message) {
+    void sendMessage(Message message) throws RemoteException {
         final RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
         final long pid = runtime.getPid();
-        if (mustEnd())
+        if (mustEnd()) {
             return;
+        }
         if (message instanceof PrivateMessage) {
             Player sender = ((PrivateMessage) message).getSenderPlayer();
-            String msg = String.format(msgTemplate, pid, getUserName(), sender.getUserName(), message.getValue());
+            String msg = String
+                .format(msgTemplate, pid, getUserName(), sender.getUserName(), message.getValue());
             System.out.println(msg);
-            PrivateMessage replyMessage = new PrivateMessage(message.getValue() + (receiveCounter + 1), this, sender);
+            PrivateMessage replyMessage = new PrivateMessage(
+                message.getValue() + (receiveCounter + 1), this, sender.getUserName());
             receiveCounter++;
             sendCounter++;
             chat.sendMessage(replyMessage);
         }
     }
 
+    @Override
+    public void notify(Message msg) throws RemoteException {
+        chatServer.sendMessage(msg);
+
+    }
+
+    @Override
+    public void messageReceived(Message msg) throws RemoteException {
+        System.out.println("msg received");
+        System.out.println("client PID:" + ManagementFactory.getRuntimeMXBean().getPid());
+
+    }
+
     /**
      * Implements the requirement for ending the messaging chain and the program
-     *
-     * @return
      */
     boolean mustEnd() {
         return sendCounter == MAX_COUNTER && receiveCounter == MAX_COUNTER;

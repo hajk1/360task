@@ -1,6 +1,7 @@
 package com.t360.model;
 
-import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Objects;
 
 /**
@@ -11,12 +12,13 @@ import java.util.Objects;
 /**
  * This is the super class for all players, it contain all necessary fields
  */
-public abstract class SuperPlayer implements Serializable {
+public abstract class SuperPlayer extends UnicastRemoteObject {
 
     private final String userName;
     Chat chat;
 
-    SuperPlayer(String userName) {
+    SuperPlayer(String userName) throws RemoteException {
+        super();
         this.userName = userName;
     }
 
@@ -26,10 +28,8 @@ public abstract class SuperPlayer implements Serializable {
 
     /**
      * All the implementation classes must implement this method as well
-     *
-     * @param message
      */
-    abstract void sendMessage(Message message);
+    abstract void sendMessage(Message message) throws RemoteException;
 
     /**
      * @return

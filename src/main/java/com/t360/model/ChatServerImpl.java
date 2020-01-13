@@ -6,10 +6,12 @@ package com.t360.model;
  **/
 
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 
 /**
  * This class is used as the main class inorder to start the chat
@@ -18,13 +20,26 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
 
+    public static String clientName = "ChatClient";
     public static String msg_player1 = "Plz Enter 1st username:";
     public static String msg_player2 = "Plz Enter 2nd username:";
     public static String send_msg_template = "Hi %s! Enter your message to sent to %s";
     public static final String HOST_USERNAME = "host";
     public static int remotePort = 5000;
     public static String serverName = "ChatServer";
+    LinkedList<IMessageListener> listeners = new LinkedList<>();
     private Chat chat;
+
+    public static String getServerLocation() {
+        return "rmi://localhost:" + remotePort + "/" + serverName;
+    }
+
+    public static ChatServer createFactory() throws RemoteException, MalformedURLException {
+        ChatServer chatServer = new ChatServerImpl();
+        LocateRegistry.createRegistry(remotePort);
+        Naming.rebind(getServerLocation(), chatServer);
+        return chatServer;
+    }
 
     public ChatServerImpl() throws RemoteException {
         super();
@@ -34,11 +49,8 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
     public static void run() {
         try {
             System.out.println("server PID:" + ManagementFactory.getRuntimeMXBean().getPid());
-            ChatServer chatServer = new ChatServerImpl();
-            chatServer.registerPlayer(HOST_USERNAME);
-            LocateRegistry.createRegistry(remotePort);
-            String sb = "rmi://localhost:" + remotePort + "/" + serverName;
-            Naming.rebind(sb, chatServer);
+            createFactory();
+            new Player(HOST_USERNAME, getServerLocation());
             System.err.println("Server ready");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
@@ -47,26 +59,24 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
     }
 
     @Override
-    public void registerPlayer(Player player) throws RemoteException {
-        chat.attach(player);
-    }
-
-    public Player registerPlayer(String userName) {
-        return new Player(chat, userName);
-    }
-
-    @Override
     public SuperPlayer findPlayer(String userName) throws RemoteException {
         return chat.findByUsername(userName);
     }
 
     @Override
-    public void sendMessage(Message message) {
-        chat.sendMessage(message);
+    public void sendMessage(Message message) throws RemoteException {
+        for (IMessageListener listener : listeners) {
+            listener.messageReceived(message);
+        }
     }
 
     @Override
     public Chat getChat() throws RemoteException {
         return chat;
+    }
+
+    @Override
+    public void registerListener(IMessageListener listener) throws RemoteException {
+        listeners.add(listener);
     }
 }

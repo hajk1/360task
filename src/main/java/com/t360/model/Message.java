@@ -5,12 +5,13 @@ package com.t360.model;
  * @since : 12/20/2019, Fri
  **/
 
-import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * This interface is used for base message skeleton
  */
-public interface Message extends Serializable {
+public interface Message extends Remote {
 
-    String getValue();
+  String getValue() throws RemoteException;
 }
