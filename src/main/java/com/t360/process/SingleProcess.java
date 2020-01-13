@@ -35,5 +35,7 @@ public class SingleProcess {
         PrivateMessage privateMessage = new PrivateMessage(msg, initiator.getUserName(),
                 secondPlayer.getUserName());
         chatServer.sendMessage(privateMessage);
+        chatServer.exit();
+        System.exit(0);
     }
 }

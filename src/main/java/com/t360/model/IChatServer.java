@@ -16,4 +16,7 @@ public interface IChatServer extends Remote {
     void registerListener(IMessageListener listener) throws RemoteException;
 
     void sendMessage(IMessage message) throws RemoteException;
+
+    void exit() throws RemoteException;
+
 }

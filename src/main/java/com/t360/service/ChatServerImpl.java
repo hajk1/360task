@@ -98,4 +98,16 @@ public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
     public void registerListener(IMessageListener listener) throws RemoteException {
         listeners.add(listener);
     }
+
+    public void exit() throws RemoteException {
+        try {
+            // Unregister ourself
+            Naming.unbind(getServerLocation());
+            // Unexport; this will also remove us from the RMI runtime
+            UnicastRemoteObject.unexportObject(this, true);
+            System.out.println("Chat Server exiting...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
