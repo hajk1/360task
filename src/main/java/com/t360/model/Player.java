@@ -53,7 +53,14 @@ public class Player extends SuperPlayer implements IClient, IMessageListener, Re
     @Override
     public void notify(IMessage msg) throws RemoteException {
         chatServer.sendMessage(msg);
+    }
 
+    @Override
+    public void exit() throws RemoteException {
+        try {
+            chatServer.exit();
+        } catch (Exception ignored) {
+        }
     }
 
     /**

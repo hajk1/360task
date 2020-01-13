@@ -35,6 +35,8 @@ public class Client {
         String msg = scanner.nextLine();
         IMessage privateMessage = new PrivateMessage(msg, initiator.getUserName(), HOST_USERNAME);
         initiator.notify(privateMessage);
+        initiator.exit();
+        System.exit(0);
     }
 
 }

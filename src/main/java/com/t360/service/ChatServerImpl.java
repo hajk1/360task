@@ -109,5 +109,6 @@ public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.exit(0);
     }
 }
