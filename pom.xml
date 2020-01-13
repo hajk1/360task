@@ -23,7 +23,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.t360.model.MainApplication</mainClass>
+                            <mainClass>com.t360.MainApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

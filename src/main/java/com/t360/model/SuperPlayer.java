@@ -13,9 +13,7 @@ import java.util.Objects;
  * This is the super class for all players, it contain all necessary fields
  */
 public abstract class SuperPlayer extends UnicastRemoteObject {
-
     private final String userName;
-    Chat chat;
 
     SuperPlayer(String userName) throws RemoteException {
         super();
@@ -25,11 +23,6 @@ public abstract class SuperPlayer extends UnicastRemoteObject {
     public String getUserName() {
         return userName;
     }
-
-    /**
-     * All the implementation classes must implement this method as well
-     */
-    abstract void sendMessage(Message message) throws RemoteException;
 
     /**
      * @return

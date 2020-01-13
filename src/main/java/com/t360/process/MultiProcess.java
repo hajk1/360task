@@ -1,4 +1,7 @@
-package com.t360.model;
+package com.t360.process;
+
+import com.t360.service.ChatServerImpl;
+import com.t360.service.Client;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -9,6 +12,10 @@ import java.util.Scanner;
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
  * @since : 1/11/2020, Sat
  **/
+
+/**
+ * This class is used for a multi process run time
+ */
 public class MultiProcess {
     private static final String SERVER_MODE = "S";
     private static final String CLIENT_MODE = "C";

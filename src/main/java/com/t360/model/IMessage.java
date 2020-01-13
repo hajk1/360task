@@ -11,7 +11,11 @@ import java.rmi.RemoteException;
 /**
  * This interface is used for base message skeleton
  */
-public interface Message extends Remote {
+public interface IMessage extends Remote {
 
   String getValue() throws RemoteException;
+
+  String getSenderUsername() throws RemoteException;
+
+  String getReceiverUsername() throws RemoteException;
 }

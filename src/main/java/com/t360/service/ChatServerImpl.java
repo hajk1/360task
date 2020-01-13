@@ -1,9 +1,14 @@
-package com.t360.model;
+package com.t360.service;
 
 /**
  * @author : Kayvan Tehrani<k1.tehrani@gmail.com>
  * @since : 1/6/2020, Mon
  **/
+
+import com.t360.model.IChatServer;
+import com.t360.model.IMessage;
+import com.t360.model.IMessageListener;
+import com.t360.model.Player;
 
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
@@ -18,7 +23,7 @@ import java.util.LinkedList;
  * It creates a chat and then 2 players
  * The 1st player(initiator) creates a private message and send it using chat class which has access to both players
  */
-public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
+public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
 
     public static String clientName = "ChatClient";
     public static String msg_player1 = "Plz Enter 1st username:";
@@ -27,25 +32,32 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
     public static final String HOST_USERNAME = "host";
     public static int remotePort = 5000;
     public static String serverName = "ChatServer";
-    LinkedList<IMessageListener> listeners = new LinkedList<>();
-    private Chat chat;
-
+    private LinkedList<IMessageListener> listeners = new LinkedList<>();
     public static String getServerLocation() {
         return "rmi://localhost:" + remotePort + "/" + serverName;
     }
 
-    public static ChatServer createFactory() throws RemoteException, MalformedURLException {
-        ChatServer chatServer = new ChatServerImpl();
+    private ChatServerImpl() throws RemoteException {
+        super();
+    }
+
+    /**
+     * This is used for creating new instance
+     *
+     * @return
+     * @throws RemoteException
+     * @throws MalformedURLException
+     */
+    public static IChatServer createFactory() throws RemoteException, MalformedURLException {
+        IChatServer chatServer = new ChatServerImpl();
         LocateRegistry.createRegistry(remotePort);
         Naming.rebind(getServerLocation(), chatServer);
         return chatServer;
     }
 
-    public ChatServerImpl() throws RemoteException {
-        super();
-        chat = new Chat();
-    }
-
+    /**
+     * This method is used for starting the Chat server
+     */
     public static void run() {
         try {
             System.out.println("server PID:" + ManagementFactory.getRuntimeMXBean().getPid());
@@ -58,23 +70,30 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServer {
         }
     }
 
+    /**
+     * This method is used for sending message to the receiver player
+     * @param message
+     * @throws RemoteException
+     */
     @Override
-    public SuperPlayer findPlayer(String userName) throws RemoteException {
-        return chat.findByUsername(userName);
-    }
-
-    @Override
-    public void sendMessage(Message message) throws RemoteException {
-        for (IMessageListener listener : listeners) {
+    public void sendMessage(IMessage message) throws RemoteException {
+        IMessageListener listener = listeners.stream().filter(iMessageListener -> {
+            try {
+                return message.getReceiverUsername().equals(iMessageListener.getUserName());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }).findFirst().orElse(null);
+        if (listener != null)
             listener.messageReceived(message);
-        }
     }
 
-    @Override
-    public Chat getChat() throws RemoteException {
-        return chat;
-    }
-
+    /**
+     * This method registers the listener inorder to notify the clients
+     * @param listener
+     * @throws RemoteException
+     */
     @Override
     public void registerListener(IMessageListener listener) throws RemoteException {
         listeners.add(listener);

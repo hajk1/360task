@@ -11,16 +11,16 @@ import java.rmi.server.UnicastRemoteObject;
 /***
  * This class is a private message between 2 players, it holds the message content and the sender and receiver players as well
  */
-public class PrivateMessage extends UnicastRemoteObject implements Message {
+public class PrivateMessage extends UnicastRemoteObject implements IMessage {
 
     private final String value;
     private final String receiverUsername;
-    private final Player senderPlayer;
+    private final String senderUsername;
 
-    public PrivateMessage(String value, Player senderPlayer, String receiverUsername)
+    public PrivateMessage(String value, String senderUsername, String receiverUsername)
         throws RemoteException {
         this.value = value;
-        this.senderPlayer = senderPlayer;
+        this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
     }
 
@@ -28,11 +28,12 @@ public class PrivateMessage extends UnicastRemoteObject implements Message {
         return value;
     }
 
-    public String getReceiverUsername() {
-        return receiverUsername;
+    @Override
+    public String getSenderUsername() throws RemoteException {
+        return senderUsername;
     }
 
-    public Player getSenderPlayer() {
-        return senderPlayer;
+    public String getReceiverUsername() {
+        return receiverUsername;
     }
 }
