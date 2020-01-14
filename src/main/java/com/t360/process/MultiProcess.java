@@ -1,8 +1,9 @@
 package com.t360.process;
 
+import static com.t360.MainApplication.rb;
+
 import com.t360.service.ChatServerImpl;
 import com.t360.service.Client;
-
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,13 +20,12 @@ import java.util.Scanner;
 public class MultiProcess {
     private static final String SERVER_MODE = "S";
     private static final String CLIENT_MODE = "C";
-    private static final String msg_server_client = "Server(S) mode or Client(C)?";
 
     public void run() throws RemoteException, MalformedURLException, NotBoundException {
         Scanner scanner = new Scanner(System.in);
         String process_state;
         do {
-            System.out.println(msg_server_client);
+            System.out.println(rb.getString("server.client.choice"));
             process_state = scanner.nextLine();
         } while (!process_state.matches("[SC]"));
 

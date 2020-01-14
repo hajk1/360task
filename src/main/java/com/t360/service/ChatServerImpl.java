@@ -5,11 +5,12 @@ package com.t360.service;
  * @since : 1/6/2020, Mon
  **/
 
+import static com.t360.MainApplication.rb;
+
 import com.t360.model.IChatServer;
 import com.t360.model.IMessage;
 import com.t360.model.IMessageListener;
 import com.t360.model.Player;
-
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -25,10 +26,6 @@ import java.util.LinkedList;
  */
 public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
 
-    public static String clientName = "ChatClient";
-    public static String msg_player1 = "Plz Enter 1st username:";
-    public static String msg_player2 = "Plz Enter 2nd username:";
-    public static String send_msg_template = "Hi %s! Enter your message to sent to %s";
     public static final String HOST_USERNAME = "host";
     public static int remotePort = 5000;
     public static String serverName = "ChatServer";
@@ -60,12 +57,13 @@ public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
      */
     public static void run() {
         try {
-            System.out.println("server PID:" + ManagementFactory.getRuntimeMXBean().getPid());
+            System.out.println(
+                rb.getString("server.pid") + ManagementFactory.getRuntimeMXBean().getPid());
             createFactory();
             new Player(HOST_USERNAME, getServerLocation());
-            System.err.println("Server ready");
+            System.err.println(rb.getString("server.start"));
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println(rb.getString("server.exception") + e.toString());
             e.printStackTrace();
         }
     }
@@ -105,7 +103,7 @@ public class ChatServerImpl extends UnicastRemoteObject implements IChatServer {
             Naming.unbind(getServerLocation());
             // Unexport; this will also remove us from the RMI runtime
             UnicastRemoteObject.unexportObject(this, true);
-            System.out.println("Chat Server exiting...");
+            System.out.println(rb.getString("server.exit"));
         } catch (Exception e) {
             e.printStackTrace();
         }

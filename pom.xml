@@ -8,6 +8,15 @@
     <artifactId>assignment</artifactId>
     <version>1.0-SNAPSHOT</version>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>messages.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -30,8 +39,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <version>3.1.2</version>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
